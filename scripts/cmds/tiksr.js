@@ -10,7 +10,7 @@ async function getStreamFromURL(url) {
 
 module.exports = {
   config: {
-    name: "tiktok",
+    name: "tiksr",
     aliases: ["tikvd"],
     author: "BaYjid",
     version: "1.0.3",
