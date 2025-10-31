@@ -1,125 +1,147 @@
-const axios = require("axios");
-const fs = require("fs-extra");
-const path = require("path");
+const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
 
-const baseApiUrl = async () => {
-    const base = await axios.get(
-        `https://raw.githubusercontent.com/Blankid018/D1PT0/main/baseApiUrl.json`,
-    );
-    return base.data.api;
-};
+async function getStreamFromURL(url) {
+  const response = await axios.get(url, { responseType: 'stream' });
+  return response.data;
+}
 
-module.exports.config = {
-    name: "tiksr",
-    version: "1.0",
-    author: "Mesbah Bb'e",
-    countDown: 5,
-    role: 0,
-    description: {
-        en: "Search for TikTok videos",
+module.exports = {
+  config: {
+    name: "tiktok",
+    aliases: ["tikvd"],
+    author: "BaYjid",
+    version: "1.0.3",
+    shortDescription: {
+      en: "Play TikTok video by number",
     },
-    category: "MEDIA",
+    longDescription: {
+      en: "Search and play a TikTok video by providing a keyword.",
+    },
+    category: "Entertainment",
     guide: {
-        en:
-            "{pn} <search> - <optional: number of results | blank>" +
-            "\nExample:" +
-            "\n{pn} caredit - 50",
+      en: "{p}tiktok [keyword]",
     },
-};
+  },
 
-module.exports.onStart = async function ({ api, args, event }) {
-    let search = args.join(" ");
-    let searchLimit = 10;
+  onStart: async function ({ api, event, args }) {
+    const keyword = args.join(' ');
 
-    const match = search.match(/^(.+)\s*-\s*(\d+)$/);
-    if (match) {
-        search = match[1].trim();
-        searchLimit = parseInt(match[2], 10);
+    if (!keyword) {
+      api.sendMessage(
+        `⚠️ Please provide a keyword.\n\nExample:\n{p}tiktok funny cats`,
+        event.threadID,
+        event.messageID
+      );
+      return;
     }
 
-    const apiUrl = `${await baseApiUrl()}/tiktoksearch?search=${encodeURIComponent(search)}&limit=${searchLimit}`;
+    const videos = await fetchTikTokVideos(keyword);
 
-    try {
-        const response = await axios.get(apiUrl);
-        const data = response.data.data;
-
-        if (!data || data.length === 0) {
-            api.sendMessage(
-                `No results found for '${search}'. Please try again with a different search term.`,
-                event.threadID,
-            );
-            return;
-        }
-
-        let replyOption = "🔍 Search Results:\n\n";
-        for (let i = 0; i < data.length; i++) {
-            const video = data[i];
-            replyOption += `${i + 1}. ${video.title}\n\n`;
-        }
-        replyOption +=
-            "Reply with the number of the video you want to download.";
-
-        const reply = await api.sendMessage(replyOption, event.threadID);
-        const replyMessageID = reply.messageID;
-
-        global.GoatBot.onReply.set(replyMessageID, {
-            commandName: this.config.name,
-            author: event.senderID,
-            messageID: replyMessageID,
-            results: data,
-        });
-    } catch (error) {
-        console.error(error);
-        api.sendMessage(`Error: ${error.message}`, event.threadID); // Corrected error message formatting
+    if (!videos || videos.length === 0) {
+      api.sendMessage(
+        `❌ No TikTok videos found for the keyword: "${keyword}".`,
+        event.threadID,
+        event.messageID
+      );
+      return;
     }
-};
 
-module.exports.onReply = async function ({ event, api, Reply }) {
-    const { author, results } = Reply;
+    const videoTitles = videos.map((v, i) => `${i + 1}. ${v.title || "No title"}`);
+    const message = `🎵 TikTok Search Results for "${keyword}" 🎵\n\n${videoTitles.join('\n')}\n\n👉 Reply with the number of the video you want to play.`;
+
+    const tempFilePath = path.join(os.tmpdir(), `tiktok_${event.senderID}.json`);
+    fs.writeFileSync(tempFilePath, JSON.stringify(videos, null, 2));
+
+    api.sendMessage(message, event.threadID, (err, info) => {
+      if (err) return console.error(err);
+      global.GoatBot.onReply.set(info.messageID, {
+        commandName: 'tiktok',
+        author: event.senderID,
+        tempFilePath
+      });
+    });
+  },
+
+  onReply: async function ({ api, event, Reply, args }) {
+    const { author, tempFilePath } = Reply;
 
     if (event.senderID !== author) return;
-
-    const selectedNumber = parseInt(event.body);
-
-    if (
-        isNaN(selectedNumber) ||
-        selectedNumber <= 0 ||
-        selectedNumber > results.length
-    ) {
-        api.sendMessage(
-            "Invalid option selected. Please reply with a valid number.",
-            event.threadID,
-        );
-        return;
+    if (!fs.existsSync(tempFilePath)) {
+      api.sendMessage("⚠️ Session expired. Please search again.", event.threadID, event.messageID);
+      return;
     }
 
-    await api.unsendMessage(Reply.messageID);
-    const selectedVideo = results[selectedNumber - 1];
+    const videoIndex = parseInt(args[0]);
+    if (isNaN(videoIndex) || videoIndex < 1) {
+      api.sendMessage("❌ Invalid input. Please reply with a valid number.", event.threadID, event.messageID);
+      return;
+    }
 
     try {
-        const response = await axios.get(selectedVideo.video, {
-            responseType: "arraybuffer",
-        });
-        const videoBuffer = response.data;
+      const videos = JSON.parse(fs.readFileSync(tempFilePath, 'utf8'));
 
-        const filename = `${selectedVideo.title.replace(/[^\w\s]/gi, "")}.mp4`;
-        const filepath = path.join(__dirname, filename);
+      if (videoIndex > videos.length) {
+        api.sendMessage("⚠️ Please choose a number within the available range.", event.threadID, event.messageID);
+        return;
+      }
 
-        await fs.writeFile(filepath, videoBuffer);
+      const selected = videos[videoIndex - 1];
+      const videoUrl = selected.play || selected.playAddr || selected.url;
 
-        let infoMessage = `🎥 Video Title: ${selectedVideo.title}\n`;
-        infoMessage += `🔗 Video URL: ${selectedVideo.video}\n`;
+      if (!videoUrl) {
+        api.sendMessage("❌ Error: Video URL not found.", event.threadID, event.messageID);
+        return;
+      }
 
-        api.sendMessage(
-            { body: infoMessage, attachment: fs.createReadStream(filepath) },
-            event.threadID,
-        );
-        await fs.unlink(filepath);
-    } catch (error) {
-        console.error(error);
-        api.sendMessage(
-            "An error occurred while downloading the TikTok video.",
-            event.threadID,
-        );
+      api.sendMessage("📥 Downloading video, please wait...", event.threadID, event.messageID);
+      const stream = await getStreamFromURL(videoUrl);
+
+      api.sendMessage(
+        {
+          body: `✅ Here’s your TikTok video:\n\n🎬 Title: ${selected.title || "Untitled"}\n👤 Author: ${selected.author?.unique_id || "Unknown"}`,
+          attachment: stream
+        },
+        event.threadID,
+        event.messageID
+      );
+    } catch (err) {
+      console.error("TikTok Fetch Error:", err);
+      api.sendMessage("❌ An error occurred while processing the video. Try again later.", event.threadID, event.messageID);
+    } finally {
+      try {
+        fs.unlinkSync(tempFilePath);
+      } catch {}
+      global.GoatBot.onReply.delete(event.messageID);
     }
+  },
 };
+
+async function fetchTikTokVideos(keyword) {
+  const options = {
+    method: 'GET',
+    url: 'https://tiktok-scraper7.p.rapidapi.com/feed/search',
+    params: {
+      keywords: keyword,
+      region: 'bd',
+      count: '10',
+      cursor: '0',
+      publish_time: '0',
+      sort_type: '0'
+    },
+    headers: {
+      'X-RapidAPI-Key': 'b38444b5b7mshc6ce6bcd5c9e446p154fa1jsn7bbcfb025b3b',
+      'X-RapidAPI-Host': 'tiktok-scraper7.p.rapidapi.com'
+    },
+  };
+
+  try {
+    const res = await axios.request(options);
+    return res.data.data?.videos || [];
+  } catch (err) {
+    console.error("API Error:", err.response?.data || err);
+    return [];
+  }
+}
