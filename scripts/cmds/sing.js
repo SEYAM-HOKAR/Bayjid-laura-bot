@@ -4,17 +4,10 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 
-const baseApiUrl = async () => {
-  const base = await axios.get(
-    "https://raw.githubusercontent.com/Blankid018/D1PT0/main/baseApiUrl.json"
-  );
-  return base.data.api;
-};
-
 module.exports = {
   config: {
     name: "sing",
-    version: "1.0.9",
+    version: "1.2.0",
     author: "BaYjid",
     usePrefix: false,
     category: "🎵 Youtube Song Downloader",
@@ -26,28 +19,24 @@ module.exports = {
   onStart: async ({ event, api, args, message }) => {
     try {
       const query = args.join(" ");
-      if (!query) {
-        return message.reply("❌ Please provide a song name or keyword!");
-      }
+      if (!query) return message.reply("❌ Please provide a song name or keyword!");
 
       api.setMessageReaction("⏳", event.messageID, () => {}, true);
 
-      const searchResponse = await axios.get(
-        `${await baseApiUrl()}/ytFullSearch?songName=${encodeURIComponent(query)}`
-      );
+      // 🔍 Search videos
+      const searchUrl = `https://www.noobs-api.top/dipto/ytFullSearch?songName=${encodeURIComponent(query)}`;
+      const searchResponse = await axios.get(searchUrl);
 
+      // ⏱ Parse time
       const parseDuration = (timestamp) => {
-        const parts = timestamp.split(":").map((part) => parseInt(part));
-        let seconds = 0;
-        if (parts.length === 3) {
-          seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
-        } else if (parts.length === 2) {
-          seconds = parts[0] * 60 + parts[1];
-        }
-        return seconds;
+        const parts = timestamp.split(":").map((x) => parseInt(x));
+        if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+        if (parts.length === 2) return parts[0] * 60 + parts[1];
+        return 0;
       };
 
-      const filteredVideos = searchResponse.data.filter((video) => {
+      // 🎵 Filter short videos
+      const filtered = searchResponse.data.filter((video) => {
         try {
           return parseDuration(video.time) < 600;
         } catch {
@@ -55,33 +44,31 @@ module.exports = {
         }
       });
 
-      if (filteredVideos.length === 0) {
-        return message.reply("⭕ No short videos found (under 10 minutes)!");
-      }
+      if (!filtered.length) return message.reply("⭕ No short videos found (under 10 minutes)!");
 
-      const selectedVideo = filteredVideos[0];
-      const tempFilePath = path.join(__dirname, "temp_audio.mp3");
+      const video = filtered[0];
+      const tempPath = path.join(__dirname, "temp_audio.mp3");
 
+      // 🎧 Download audio using fixed API
       const apiResponse = await axios.get(
-        `${await baseApiUrl()}/ytDl3?link=${selectedVideo.id}&format=mp3`
+        `https://www.noobs-api.top/dipto/ytDl3?link=${video.id}&format=mp3`
       );
 
-      if (!apiResponse.data.downloadLink) {
+      if (!apiResponse.data.downloadLink)
         throw new Error("⚠ No audio URL found in response");
-      }
 
-      const writer = fs.createWriteStream(tempFilePath);
-      const audioResponse = await axios({
+      const audioStream = await axios({
         url: apiResponse.data.downloadLink,
         method: "GET",
         responseType: "stream"
       });
 
-      audioResponse.data.pipe(writer);
+      const writer = fs.createWriteStream(tempPath);
+      audioStream.data.pipe(writer);
 
-      await new Promise((resolve, reject) => {
-        writer.on("finish", resolve);
-        writer.on("error", reject);
+      await new Promise((res, rej) => {
+        writer.on("finish", res);
+        writer.on("error", rej);
       });
 
       api.setMessageReaction("✅", event.messageID, () => {}, true);
@@ -91,24 +78,24 @@ module.exports = {
       🎶 Now Playing 🎶
 ╚════════════════╝
 
-🎧 Title   : ${selectedVideo.title}
-⏱ Duration : ${selectedVideo.time}
-📺 Channel : ${selectedVideo.channel?.name || "Unknown"}
+🎧 Title   : ${video.title}
+⏱ Duration : ${video.time}
+📺 Channel : ${video.channel?.name || "Unknown"}
 
 By —͟͟͞͞💜َ 𝐁𝐚𝐘 𝐣𝐢𝐝-: )•⊰𝟑
 `;
 
       await message.reply({
         body: styledMessage,
-        attachment: fs.createReadStream(tempFilePath)
+        attachment: fs.createReadStream(tempPath)
       });
 
-      fs.unlink(tempFilePath, (err) => {
+      fs.unlink(tempPath, (err) => {
         if (err) console.error("Error deleting temp file:", err);
       });
-    } catch (error) {
-      console.error(error);
-      message.reply(`❌ Error: ${error.message}`);
+    } catch (err) {
+      console.error(err);
+      message.reply(`❌ Error: ${err.message}`);
     }
   }
 };
