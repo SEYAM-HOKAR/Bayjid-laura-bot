@@ -111,15 +111,20 @@ handlerEvents.onlyAdminToUseOnReaction=🎭 『 𝗔𝗗𝗠𝗜𝗡-𝗥𝗘�
 
 handlerEvents.onlyAdminBot2=⚙️ 『 𝗕𝗢𝗧 𝗢𝗪𝗡𝗘𝗥 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 』\n» Only bot devs can use "%1"
 
-handlerEvents.onlyAdminBot3=❌ | Only bot's Developer can use the command "%1"
+handlerEvents.onlyAdminBot3=❌ ||Fuck you🖕🙏 Only bot's Developer can use the command "%1"
+
+handlerEvents.onlyAdminBot4=❌ ||Fuck you🖕🙏 Only bot's Premium can use the command "%1"
 
 handlerEvents.onlyAdminBot2ToUseOnReply=🛡 『 𝗕𝗢𝗧 𝗢𝗪𝗡𝗘𝗥 𝗥𝗘𝗣𝗟𝗬 』\n» Only devs can reply with "%1"
 
-handlerEvents.onlyAdminBot3ToUseOnReply=❌ | Only bot's Developer can use the reply function of the command "%1"
+handlerEvents.onlyAdminBot3ToUseOnReply=❌ ||Fuck you🖕🙏 Only bot's Developer can use the reply function of the command "%1"
 
 handlerEvents.onlyAdminBot2ToUseOnReaction=💢 『 𝗕𝗢𝗧 𝗢𝗪𝗡𝗘𝗥 𝗥𝗘𝗔𝗖𝗧𝗜𝗢𝗡 』\n» Only devs can react using "%1"
 
-handlerEvents.onlyAdminBot3ToUseOnReaction=❌ | Only bot's Developer can use the reaction function of the command "%1"
+handlerEvents.onlyAdminBot3ToUseOnReaction=❌ ||Fuck you🖕🙏 Only bot's Developer can use the reaction function of the command "%1"
+
+handlerEvents.onlyAdminBot4ToUseOnReaction=❌ |Fuck you🖕🙏 Only bot's Premium  can use the reaction function of the command "%1"
+
 
 handlerEvents.waitingForCommand=⏳ 『 𝗖𝗢𝗢𝗟𝗗𝗢𝗪𝗡 𝗜𝗡 𝗣𝗥𝗢𝗚𝗥𝗘𝗦𝗦 』\n» Please wait %1s before using this again 💤
 
