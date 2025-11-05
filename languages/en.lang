@@ -89,29 +89,58 @@ handlerCheckData.cantCreateThread=Groups with id '%1' cannot be written to the d
 handlerCheckData.cantCreateUser=Users with id '%1' cannot be written to the database!
 
 # bot/handler/handlerEvents.js
-handlerEvents.userBanned=You have been banned from using the bot\n» Reason: %1\n» Time: %2\n» User ID: %3
-handlerEvents.threadBanned=This group has been banned from using the bot\n» Reason: %1\n» Time: %2\n» Thread ID: %3
-handlerEvents.onlyAdminBox=This group is currently enabled only group administrators can use the bot
-handlerEvents.onlyAdminBot=❌ | Currently only bot's admin can use bot
-handlerEvents.commandNotFound=Command "%1" does not exist, type %2help to see all available commands
-handlerEvents.commandNotFound2=The command you are using does not exist, type %1help to see all available commands
-handlerEvents.commandSyntaxError=The command you are using is wrong syntax, please type %1help %2 to see the details of how to use this command
-handlerEvents.onlyAdmin=❌ | Only group administrators can use the command "%1"
-handlerEvents.onlyAdminToUseOnReply=❌ | Only group administrators can use the reply function of the command "%1"
-handlerEvents.onlyAdminToUseOnReaction=❌ | Only group administrators can use the reaction function of the command "%1"
-handlerEvents.onlyAdminBot2=❌ | Only bot's admin can use the command "%1"
-handlerEvents.onlyAdminBot2ToUseOnReply=❌ | Only bot's admin can use the reply function of the command "%1"
-handlerEvents.onlyAdminBot2ToUseOnReaction=❌ | Only bot's admin can use the reaction function of the command "%1"
-handlerEvents.waitingForCommand=⏱ You are in the waiting time to use this command, please come back after %1s
-handlerEvents.errorOccurred=❌ [ %1 ]\nAn error occurred at command "%2"\n\n%3
-handlerEvents.errorOccurred2=❌ [ %1 ]\nAn error occurred at command onChat in command "%2"\n\n%3
-handlerEvents.errorOccurred3=❌ [ %1 ]\nAn error occurred when executing onReply at command "%2"\n\n%3
-handlerEvents.errorOccurred4=❌ [ %1 ]\nAn error occurred when executing onReaction at command "%2"\n\n%3
-handlerEvents.errorOccurred5=❌ [ %1 ]\nAn error occurred when executing onEvent at command "%2"\n\n%3
-handlerEvents.errorOccurred6=❌ [ %1 ]\nAn error occurred when executing onEvent at command "%2"\n\n%3
-handlerEvents.errorOccurred7=❌ [ %1 ]\nAn error occurred when executing onAnyEvent at command "%2"\n\n%3
-handlerEvents.cannotFindCommandName=❌ Cannot find command name to execute this reply!
-handlerEvents.cannotFindCommand=❌ Cannot find command "%1" to execute this reply!
+handlerEvents.userBanned=⛔『 𝗔𝗖𝗖𝗘𝗦𝗦 𝗕𝗟𝗢𝗖𝗞𝗘𝗗 』\n❖ 𝗥𝗲𝗮𝘀𝗼𝗻: %1\n❖ 𝗧𝗶𝗺𝗲: %2\n❖ 𝗨𝘀𝗲𝗿 𝗜𝗗: %3
+
+handlerEvents.threadBanned=🚫『 𝗚𝗥𝗢𝗨𝗣 𝗕𝗔𝗡𝗡𝗘𝗗 』\n❖ 𝗥𝗲𝗮𝘀𝗼𝗻: %1\n❖ 𝗧𝗶𝗺𝗲: %2\n❖ 𝗧𝗵𝗿𝗲𝗮𝗱 𝗜𝗗: %3
+
+handlerEvents.onlyAdminBox=🔐 『 𝗔𝗗𝗠𝗜𝗡-𝗢𝗡𝗟𝗬 𝗠𝗢𝗗𝗘 』\n➤ Only group 𝗮𝗱𝗺𝗶𝗻𝘀 can use this bot 💼
+
+handlerEvents.onlyAdminBot= 『 𝗥𝗘𝗦𝗧𝗥𝗜𝗖𝗧𝗘𝗗 𝗔𝗖𝗖𝗘𝗦𝗦 』\n➤ Only 𝗯𝗼𝘁 𝗼𝘄𝗻𝗲𝗿𝘀 can use this feature 
+
+handlerEvents.commandNotFound=  『 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗡𝗢𝗧 𝗙𝗢𝗨𝗡𝗗 』\n» Try %2help to explore commands 🔍
+
+handlerEvents.commandNotFound2= 『 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗡𝗢𝗧 𝗙𝗢𝗨𝗡𝗗 』 The command you are using does not exist, type %1help to see all available commands
+
+handlerEvents.commandSyntaxError=📘 『 𝗦𝗬𝗡𝗧𝗔𝗫 𝗘𝗥𝗥𝗢𝗥 』\n» Wrong usage detected 🧩\n» Use: %1help %2 for correct syntax
+
+handlerEvents.onlyAdmin=🔒 『 𝗔𝗗𝗠𝗜𝗡 𝗣𝗘𝗥𝗠𝗜𝗦𝗦𝗜𝗢𝗡 𝗥𝗘𝗤𝗨𝗜𝗥𝗘𝗗 』\n» Only group admins can run "%1"
+
+handlerEvents.onlyAdminToUseOnReply=🔁 『 𝗔𝗗𝗠𝗜𝗡-𝗥𝗘𝗣𝗟𝗬 𝗥𝗘𝗦𝗧𝗥𝗜𝗖𝗧𝗘𝗗 』\n» Only admins can reply with "%1"
+
+handlerEvents.onlyAdminToUseOnReaction=🎭 『 𝗔𝗗𝗠𝗜𝗡-𝗥𝗘𝗔𝗖𝗧 𝗢𝗡𝗟𝗬 』\n» Only admins can react with "%1"
+
+handlerEvents.onlyAdminBot2=⚙️ 『 𝗕𝗢𝗧 𝗢𝗪𝗡𝗘𝗥 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 』\n» Only bot devs can use "%1"
+
+handlerEvents.onlyAdminBot3=❌ | Only bot's Developer can use the command "%1"
+
+handlerEvents.onlyAdminBot2ToUseOnReply=🛡 『 𝗕𝗢𝗧 𝗢𝗪𝗡𝗘𝗥 𝗥𝗘𝗣𝗟𝗬 』\n» Only devs can reply with "%1"
+
+handlerEvents.onlyAdminBot3ToUseOnReply=❌ | Only bot's Developer can use the reply function of the command "%1"
+
+handlerEvents.onlyAdminBot2ToUseOnReaction=💢 『 𝗕𝗢𝗧 𝗢𝗪𝗡𝗘𝗥 𝗥𝗘𝗔𝗖𝗧𝗜𝗢𝗡 』\n» Only devs can react using "%1"
+
+handlerEvents.onlyAdminBot3ToUseOnReaction=❌ | Only bot's Developer can use the reaction function of the command "%1"
+
+handlerEvents.waitingForCommand=⏳ 『 𝗖𝗢𝗢𝗟𝗗𝗢𝗪𝗡 𝗜𝗡 𝗣𝗥𝗢𝗚𝗥𝗘𝗦𝗦 』\n» Please wait %1s before using this again 💤
+
+handlerEvents.errorOccurred=💥 『 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗘𝗥𝗥𝗢𝗥 』\n✦ Module: %1\n✦ Command: "%2"\n✦ Details:\n%3
+
+handlerEvents.errorOccurred2=💥 『 𝗢𝗡𝗖𝗛𝗔𝗧 𝗙𝗔𝗜𝗟𝗘𝗗 』\n✦ Module: %1\n✦ Command: "%2"\n✦ Details:\n%3
+
+handlerEvents.errorOccurred3=💥 『 𝗥𝗘𝗣𝗟𝗬 𝗘𝗥𝗥𝗢𝗥 』\n✦ Module: %1\n✦ Command: "%2"\n✦ Details:\n%3
+
+handlerEvents.errorOccurred4=💥 『 𝗥𝗘𝗔𝗖𝗧𝗜𝗢𝗡 𝗙𝗔𝗜𝗟𝗨𝗥𝗘 』\n✦ Module: %1\n✦ Command: "%2"\n✦ Details:\n%3
+
+handlerEvents.errorOccurred5=💥 『 𝗢𝗡𝗘𝗩𝗘𝗡𝗧 𝗘𝗥𝗥𝗢𝗥 (v1) 』\n✦ Module: %1\n✦ Command: "%2"\n✦ Details:\n%3
+
+handlerEvents.errorOccurred6=💥 『 𝗢𝗡𝗘𝗩𝗘𝗡𝗧 𝗘𝗥𝗥𝗢𝗥 (v2) 』\n✦ Module: %1\n✦ Command: "%2"\n✦ Details:\n%3
+
+handlerEvents.errorOccurred7=💥 『 𝗔𝗡𝗬𝗘𝗩𝗘𝗡𝗧 𝗘𝗥𝗥𝗢𝗥 』\n✦ Module: %1\n✦ Command: "%2"\n✦ Details:\n%3
+
+handlerEvents.cannotFindCommandName=❓『 𝗥𝗘𝗣𝗟𝗬 𝗙𝗔𝗜𝗟𝗘𝗗 』\n» Command name not found in context! 💀
+
+handlerEvents.cannotFindCommand=❓『 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗡𝗢𝗧 𝗘𝗫𝗜𝗦𝗧 』\n» Cannot execute reply using "%1"
+
 
 # bot/autoUptime.js
 autoUptime.autoUptimeTurnedOn=AutoUptime mode turned on
