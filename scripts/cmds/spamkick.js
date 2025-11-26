@@ -2,7 +2,7 @@ module.exports.config = {
   name: "spamkick",
   version: "1.0.0",
   role: 0, 
-  author: "Dipto",
+  author: "BaYjid",
   usePrefix: true,
   description: { 
       en: "Automatically kick a user who spams messages in a group chat"
