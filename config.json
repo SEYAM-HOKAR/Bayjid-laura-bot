@@ -14,7 +14,7 @@
   "language": "en",
   "notesLanguage": "change to your language with ISO 639-1 code...",
   "nickNameBot": "XASS-BOT",
-  "prefix": "*",
+  "prefix": ".",
 
   "adminOnly": {
     "enable": false,
